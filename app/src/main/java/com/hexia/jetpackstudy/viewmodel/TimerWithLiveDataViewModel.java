@@ -38,6 +38,8 @@ public class TimerWithLiveDataViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        mTimer.cancel();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
     }
 }
