@@ -6,7 +6,11 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.arch.core.util.Function;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hexia.jetpackstudy.R;
@@ -38,6 +42,32 @@ public class TimerWithLiveDataActivity extends AppCompatActivity {
     private void initComponent() {
         mTimerWithLiveDataViewModel = new ViewModelProvider(this).get(TimerWithLiveDataViewModel.class);
         mLiveData = mTimerWithLiveDataViewModel.getCurrentSecond();
-        mLiveData.observe(this, integer -> mTimeTv.setText(String.valueOf(integer)));
+//        mLiveData.observe(this, integer -> mTimeTv.setText(String.valueOf(integer)));
+
+        LiveData<String> map = Transformations.map(mLiveData, new Function<Integer, String>() {
+            @Override
+            public String apply(Integer input) {
+                return "\"" + input + "\"";
+            }
+        });
+        map.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                mTimeTv.setText(s);
+            }
+        });
+
+//        LiveData<String> switchMap = Transformations.switchMap(mLiveData, new Function<Integer, LiveData<String>>() {
+//            @Override
+//            public LiveData<String> apply(Integer input) {
+//                return new MutableLiveData<>(input + "!");
+//            }
+//        });
+//        switchMap.observe(this, new Observer<String>() {
+//            @Override
+//            public void onChanged(String s) {
+//                mTimeTv.setText(s);
+//            }
+//        });
     }
 }
