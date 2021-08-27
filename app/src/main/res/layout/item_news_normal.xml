@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/item_news_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/item_news_tv_img"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_news_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#333333"
+                android:textSize="16dp"
+                tools:text="比卖石油还赚！苹果吸金能力有多强：1秒赚1万美元"/>
+
+            <TextView
+                android:id="@+id/item_news_tv_digest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#333333"
+                android:textSize="13dp"
+                tools:text="库克接替乔布斯的10年，把苹果市值推到了2.5万亿（逼近），当然光鲜亮丽背后是他们牺牲掉一些口碑换来的市场，比如创新力远不如从前。2011年8月，就在乔布斯卸任"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/item_news_tv_img"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/defaultbg" />
+    </RelativeLayout>
+
+    <include layout="@layout/item_news_bottom" />
+
+</LinearLayout>
