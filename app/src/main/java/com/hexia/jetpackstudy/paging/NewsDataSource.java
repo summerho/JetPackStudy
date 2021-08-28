@@ -6,44 +6,33 @@ import androidx.annotation.NonNull;
 import androidx.paging.PageKeyedDataSource;
 
 import com.hexia.jetpackstudy.http.HttpDataParse;
+import com.hexia.jetpackstudy.http.OkHttpUtil;
 import com.hexia.jetpackstudy.model.NewsBean;
 import com.hexia.jetpackstudy.utils.Api;
 import com.hexia.jetpackstudy.utils.LogUtils;
 
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 public class NewsDataSource extends PageKeyedDataSource<Integer, NewsBean> {
 
     private static final int FIRST_PAGE_NUM = 0;
 
-    private final OkHttpClient okHttpClient = new OkHttpClient();
-
     private void requestNews(int pageNum, Callback<List<NewsBean>> callback) {
         String url = Api.CommonUrl + Api.tid + "/" + pageNum + Api.endUrl;
-        Request request = new Request.Builder().url(url).build();
-        Call call = okHttpClient.newCall(request);
-        try {
-            call.enqueue(new okhttp3.Callback() {
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    List<NewsBean> newsList = HttpDataParse.parseNewsList(response.body().string(), Api.tid);
-                    callback.onSuccess(newsList);
-                }
+        OkHttpUtil.getDataAsync(url, new OkHttpUtil.ResultCallback<String>() {
+            @Override
+            public void onResponse(String response) {
+                List<NewsBean> newsList = HttpDataParse.parseNewsList(response, Api.tid);
+                callback.onSuccess(newsList);
+            }
 
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    callback.onFailed(e.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onError(Request request, Exception e) {
+                callback.onFailed(e.getMessage());
+            }
+        });
     }
 
     @Override

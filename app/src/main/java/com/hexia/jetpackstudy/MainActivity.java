@@ -1,6 +1,9 @@
 package com.hexia.jetpackstudy;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,30 +22,15 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RefreshLayout mRefreshLayout;
-
-    private RecyclerView mRecyclerView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRefreshLayout = findViewById(R.id.refreshLayout);
-        mRefreshLayout.setEnableLoadMore(true);
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.news_item_divider, null));
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-        NewsAdapter adapter = new NewsAdapter(this);
-        mRecyclerView.setAdapter(adapter);
-        NewsViewModel newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        newsViewModel.mNewsPagedList.observe(this, new Observer<PagedList<NewsBean>>() {
-            @Override
-            public void onChanged(PagedList<NewsBean> newsBeans) {
-                adapter.submitList(newsBeans);
-            }
+        Button mNewsBtn = findViewById(R.id.news_btn);
+        mNewsBtn.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, NewsActivity.class);
+            startActivity(intent);
         });
-        mRefreshLayout.setOnRefreshListener(refreshLayout -> newsViewModel.invalidateDataSource());
     }
 }
