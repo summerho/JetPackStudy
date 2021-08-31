@@ -9,9 +9,9 @@
         android:id="@+id/item_news_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="13dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="13dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +24,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:maxLines="2"
@@ -37,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:maxLines="2"
