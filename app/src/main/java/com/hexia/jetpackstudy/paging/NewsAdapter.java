@@ -13,10 +13,14 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hexia.jetpackstudy.R;
+import com.hexia.jetpackstudy.itemdrag.IItemDragCallback;
 import com.hexia.jetpackstudy.model.NewsBean;
 import com.squareup.picasso.Picasso;
 
-public class NewsAdapter extends PagedListAdapter<NewsBean, NewsAdapter.NewsViewHolder> {
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class NewsAdapter extends PagedListAdapter<NewsBean, NewsAdapter.NewsViewHolder> implements IItemDragCallback {
 
     private Context mContext;
 
@@ -57,6 +61,18 @@ public class NewsAdapter extends PagedListAdapter<NewsBean, NewsAdapter.NewsView
             holder.pubTimeTv.setText(bean.ptime);
             holder.sourceTv.setText(bean.source);
         }
+    }
+
+    @Override
+    public void onItemDragging(int from, int to) {
+        ArrayList<NewsBean> list = new ArrayList<>(getCurrentList());
+        Collections.swap(list, from, to);
+        notifyItemMoved(from, to);
+    }
+
+    @Override
+    public void onItemDragged() {
+
     }
 
     class NewsViewHolder extends RecyclerView.ViewHolder {

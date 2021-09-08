@@ -9,9 +9,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hexia.jetpackstudy.itemdrag.ItemTouchHelperCallback;
 import com.hexia.jetpackstudy.model.NewsBean;
 import com.hexia.jetpackstudy.paging.NewsAdapter;
 import com.hexia.jetpackstudy.paging.NewsViewModel;
@@ -26,6 +28,7 @@ public class NewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_layout);
         mRefreshLayout = findViewById(R.id.refreshLayout);
+        mRefreshLayout.setEnableRefresh(false);
         mRefreshLayout.setEnableLoadMore(true);
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -34,6 +37,10 @@ public class NewsActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         NewsAdapter adapter = new NewsAdapter(this);
         mRecyclerView.setAdapter(adapter);
+        ItemTouchHelperCallback itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         NewsViewModel newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
         newsViewModel.mNewsPagedList.observe(this, new Observer<PagedList<NewsBean>>() {
             @Override
