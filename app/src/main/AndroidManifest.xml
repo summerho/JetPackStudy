@@ -21,6 +21,7 @@
         </activity>
 
         <activity android:name=".NewsActivity" />
+        <activity android:name=".DragActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

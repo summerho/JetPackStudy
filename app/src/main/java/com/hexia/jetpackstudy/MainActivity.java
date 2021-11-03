@@ -32,5 +32,17 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(MainActivity.this, NewsActivity.class);
             startActivity(intent);
         });
+        Button dragBtn = findViewById(R.id.drag_btn);
+        dragBtn.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, DragActivity.class);
+            startActivity(intent);
+        });
+        Button dragBtn2 = findViewById(R.id.drag_btn2);
+        dragBtn2.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, DragActivity.class);
+            startActivity(intent);
+        });
     }
 }
