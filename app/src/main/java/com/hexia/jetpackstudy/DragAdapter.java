@@ -57,7 +57,7 @@ public class DragAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     @Override
-    public void onItemMove(RecyclerView.ViewHolder holder, int fromPosition, int targetPosition) {
+    public void onItemMove(RecyclerView.ViewHolder sourceHolder, RecyclerView.ViewHolder targetHolder, int fromPosition, int targetPosition) {
         if (fromPosition < mDataList.size() && targetPosition < mDataList.size()) {
             Collections.swap(mDataList, fromPosition, targetPosition);
             notifyItemMoved(fromPosition, targetPosition);

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         Button dragBtn2 = findViewById(R.id.drag_btn2);
         dragBtn2.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, DragActivity.class);
+            intent.setClass(MainActivity.this, DragInOneRvActivity.class);
             startActivity(intent);
         });
     }

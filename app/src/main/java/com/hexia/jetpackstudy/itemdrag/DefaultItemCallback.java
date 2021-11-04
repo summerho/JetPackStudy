@@ -20,9 +20,9 @@ public class DefaultItemCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
-                          @NonNull RecyclerView.ViewHolder target) {
-        touchHelperAdapter.onItemMove(viewHolder, viewHolder.getBindingAdapterPosition(), target.getBindingAdapterPosition());
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder sourceHolder,
+                          @NonNull RecyclerView.ViewHolder targetHolder) {
+        touchHelperAdapter.onItemMove(sourceHolder, targetHolder, sourceHolder.getBindingAdapterPosition(), targetHolder.getBindingAdapterPosition());
         return true;
     }
 

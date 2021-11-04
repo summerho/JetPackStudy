@@ -4,14 +4,17 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="optional_zhushu">
-        <item>上证指数,000001</item>
-        <item>深证成指,399001</item>
-        <item>创业板指,399006</item>
-        <item>科创50,000688</item>
-        <item>沪深300,399300</item>
-        <item>上证50,000016</item>
-        <item>上证180,000010</item>
-        <item>上证380,000009</item>
-        <item>中证500,000905</item>
+        <item>上证指数,000001,1</item>
+        <item>深证成指,399001,1</item>
+        <item>创业板指,399006,1</item>
+        <item>科创50,000688,1</item>
+        <item>沪深300,399300,1</item>
+        <item>上证50,000016,1</item>
+        <item>上证180,000010,0</item>
+        <item>上证380,000009,0</item>
+        <item>中证500,000905,0</item>
+        <item>,,0</item>
+        <item>,,0</item>
+        <item>,,0</item>
     </string-array>
 </resources>
