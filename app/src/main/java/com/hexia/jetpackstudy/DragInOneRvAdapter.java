@@ -2,7 +2,6 @@ package com.hexia.jetpackstudy;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import com.hexia.jetpackstudy.model.DragBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
@@ -32,6 +30,10 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final Context mContext;
 
     private int mSelectedNum = 0; // 上面的个数
+
+    private int mDragPosition; // 当前手指拖拽的item的position
+
+    protected OnItemDragListener mItemDragListener;
 
     public DragInOneRvAdapter(Context context, List<DragBean> list) {
         mContext = context;
@@ -55,6 +57,7 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
+            holder.setIsRecyclable(false);
             DragBean bean = mDataList.get(position < mSelectedNum ? position : position - 1);
             ((ItemViewHolder) holder).setData(bean);
         }
@@ -64,7 +67,7 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemCount() {
         mSelectedNum = 0;
         for (DragBean bean : mDataList) {
-            if (bean.type.equals("1")) {
+            if (bean.type == 1) {
                 mSelectedNum = mSelectedNum + 1;
             }
         }
@@ -80,16 +83,23 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public void setOnItemDragListener(OnItemDragListener itemDragListener) {
+        this.mItemDragListener = itemDragListener;
+    }
+
     @Override
     public void onItemMove(RecyclerView.ViewHolder sourceHolder, RecyclerView.ViewHolder targetHolder, int fromPosition, int targetPosition) {
+        if (mDragPosition > 9) { // 最后三个空item不允许拖动
+            return;
+        }
         DragBean sourceBean;
         DragBean targetBean;
         if (fromPosition < mSelectedNum && targetPosition < mSelectedNum) { // 只在上面来回拖动
             Log.d("summerho", "只在上面来回拖动 fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
             sourceBean = mDataList.get(fromPosition);
-            sourceBean.type = "1";
+            sourceBean.type = 1;
             targetBean = mDataList.get(targetPosition);
-            targetBean.type = "1";
+            targetBean.type = 1;
             if (fromPosition < targetPosition) {
                 for (int i = fromPosition; i < targetPosition; i++) {
                     Collections.swap(mDataList, i, i + 1);
@@ -106,9 +116,9 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (fromPosition > mSelectedNum && targetPosition > mSelectedNum) { // 只在下面来回拖动
             Log.d("summerho", "只在下面来回拖动 fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
             sourceBean = mDataList.get(fromPosition - 1);
-            sourceBean.type = "0";
+            sourceBean.type = 0;
             targetBean = mDataList.get(targetPosition - 1);
-            targetBean.type = "0";
+            targetBean.type = 0;
             if (fromPosition < targetPosition) {
                 for (int i = fromPosition; i < targetPosition; i++) {
                     Collections.swap(mDataList, i - 1, i);
@@ -126,9 +136,9 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d("summerho", "下面的往上面拖 fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
             Log.d("summerho", "下面的往上面拖 before" + mDataList.toString());
             sourceBean = mDataList.get(fromPosition - 1);
-            sourceBean.type = "1";
+            sourceBean.type = 1;
             targetBean = mDataList.get(targetPosition);
-            targetBean.type = "1";
+            targetBean.type = 1;
             for (int i = fromPosition; i > targetPosition + 1; i--) {
                 Collections.swap(mDataList, i - 1, i - 2);
             }
@@ -140,9 +150,9 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d("summerho", "上面的往下面拖 fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
             Log.d("summerho", "上面的往下面拖 before" + mDataList.toString());
             sourceBean = mDataList.get(fromPosition);
-            sourceBean.type = "0";
+            sourceBean.type = 0;
             targetBean = mDataList.get(targetPosition - 1);
-            targetBean.type = "0";
+            targetBean.type = 0;
             for (int i = fromPosition; i < targetPosition - 1; i++) {
                 Collections.swap(mDataList, i, i + 1);
             }
@@ -150,22 +160,10 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             notifyItemMoved(fromPosition, targetPosition);
             ((ItemViewHolder) sourceHolder).setData(sourceBean);
             ((ItemViewHolder) targetHolder).setData(targetBean);
-        } else if (mSelectedNum == mDataList.size()) { // 此时全部都在上面，从上往下拖
-            // todo
-            Log.d("summerho", "此时全部都在上面，从上往下拖 fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
-            sourceBean = mDataList.get(fromPosition);
-            sourceBean.type = "0";
-
-            for (int i = fromPosition; i < targetPosition - 1; i++) {
-                Collections.swap(mDataList, i, i + 1);
-            }
-            notifyItemMoved(fromPosition, targetPosition);
-            ((ItemViewHolder) sourceHolder).setData(sourceBean);
-//            notifyItemChanged(mDataList.size());
         } else if (mSelectedNum == 0) { // 全部在下面，下面的网上拖
             Log.d("summerho", "mSelectedNum = 0, fromPosition = " + fromPosition + ", targetPosition = " + targetPosition);
             sourceBean = mDataList.get(fromPosition - 1);
-            sourceBean.type = "1";
+            sourceBean.type = 1;
             if (fromPosition > 1) {
                 for (int i = fromPosition; i > 1; i--) {
                     Collections.swap(mDataList, i - 1, i - 2);
@@ -179,61 +177,41 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d("summerho","targetPosition = mSelectedNum, mSelectedNum > 0");
             Log.d("summerho", "targetPosition = mSelectedNum, mSelectedNum > 0, before" + mDataList.toString());
             sourceBean = mDataList.get(fromPosition - 1);
-            sourceBean.type = "1";
-            if (mSelectedNum == mDataList.size() - 1) { // 下面的只剩一个
-                notifyItemChanged(mDataList.size() - 1); // todo
-            } else {
-                for (int i = fromPosition; i > targetPosition + 1; i--) {
-                    Collections.swap(mDataList, i - 1, i - 2);
-                }
-                notifyItemMoved(fromPosition, targetPosition);
+            sourceBean.type = 1;
+            for (int i = fromPosition; i > targetPosition + 1; i--) {
+                Collections.swap(mDataList, i - 1, i - 2);
             }
+            notifyItemMoved(fromPosition, targetPosition);
             Log.d("summerho", "targetPosition = mSelectedNum, mSelectedNum > 0, after" + mDataList.toString());
             ((ItemViewHolder) sourceHolder).setData(sourceBean);
         }
     }
 
-    private void putEmptyBeanAtLast() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < mDataList.size() - mSelectedNum; i++) {
-                    for (int j = mSelectedNum; j < mDataList.size() - 1 - i; j++) {
-                        if (TextUtils.isEmpty(mDataList.get(j).name)) {
-                            Collections.swap(mDataList, j, j + 1);
-                        }
-                    }
-                }
-                notifyDataSetChanged();
-            }
-        }, 500);
-    }
-
     @Override
     public void onItemSelect(RecyclerView.ViewHolder holder) {
-        Log.e("summerho", "onItemSelect");
+        mDragPosition = holder.getBindingAdapterPosition();
+        Log.e("summerho", "onItemSelect, mDragPosition = " + mDragPosition);
     }
 
     @Override
     public void onItemClear(RecyclerView.ViewHolder holder) {
-//        Handler handler = new Handler();
-//        handler.postDelayed(() -> {
-//            Log.e("summerho", "onItemClear");
-//            List<DragBean> newList = new ArrayList<>();
-//            for (DragBean bean : mDataList) {
-//                if (!TextUtils.isEmpty(bean.name)) {
-//                    newList.add(bean);
-//                }
-//            }
-//            for (int i = 0; i < 3; i++) {
-//                newList.add(new DragBean("", "", "0"));
-//            }
-//            mDataList.clear();
-//            mDataList.addAll(newList);
-//            notifyDataSetChanged();
-//            Log.d("summerho", "onItemClear " + mDataList.toString());
-//        }, 500);
+        Log.e("summerho", "onItemClear");
+        List<DragBean> newList = new ArrayList<>();
+        for (DragBean bean : mDataList) {
+            if (!TextUtils.isEmpty(bean.name)) {
+                newList.add(bean);
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            newList.add(new DragBean("", "", 0));
+        }
+        mDataList.clear();
+        mDataList.addAll(newList);
+        notifyDataSetChanged();
+        if (mItemDragListener != null) {
+            mItemDragListener.onItemDragEnd(mSelectedNum);
+        }
+        Log.d("summerho", "onItemClear " + mDataList.toString());
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -251,7 +229,7 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             if (!TextUtils.isEmpty(bean.name)) {
                 mNameTv.setText(bean.name);
-                if (bean.type.equals("1")) {
+                if (bean.type == 1) {
                     mNameTv.setTextColor(Color.parseColor("#0C121E"));
                 } else {
                     mNameTv.setTextColor(Color.parseColor("#757E93"));
@@ -267,5 +245,9 @@ public class DragInOneRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public DividerViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    public interface OnItemDragListener {
+        void onItemDragEnd(int selectedNum);
     }
 }

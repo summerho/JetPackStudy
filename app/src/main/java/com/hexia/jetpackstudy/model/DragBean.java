@@ -6,11 +6,11 @@ public class DragBean {
 
     public String code;
 
-    public String type; // 1为已选，0为未选
+    public int type; // 1为已选，0为未选
 
     public DragBean() {}
 
-    public DragBean(String name, String code, String type) {
+    public DragBean(String name, String code, int type) {
         this.name = name;
         this.code = code;
         this.type = type;

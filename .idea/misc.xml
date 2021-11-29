@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/drag_item_bg.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/drawable/drag_item_divider.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/drawable/news_item_divider.xml" value="0.3472931562819203" />
         <entry key="app/src/main/res/drawable/selected_item_bg.xml" value="0.3541666666666667" />

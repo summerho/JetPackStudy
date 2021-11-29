@@ -45,6 +45,9 @@ public class DragInOneRvActivity extends AppCompatActivity {
                 }
             }
         });
+        adapter.setOnItemDragListener(selectedNum -> {
+
+        });
     }
 
     private void initData() {
@@ -55,7 +58,7 @@ public class DragInOneRvActivity extends AppCompatActivity {
             String[] split = s.split(",");
             bean.name = split[0];
             bean.code = split[1];
-            bean.type = split[2];
+            bean.type = Integer.parseInt(split[2]);
             mDataList.add(bean);
         }
     }
